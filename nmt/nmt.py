@@ -270,6 +270,10 @@ def add_arguments(parser):
   parser.add_argument("--num_workers", type=int, default=1,
                       help="Number of workers (inference only).")
 
+  # TensorFlow Debugger.
+  parser.add_argument("--tf_debug", type=str, default=None,
+                      help="TensorFlow Debugger target: 'local'")
+
 
 def create_hparams(flags):
   """Create training hparams."""
@@ -547,7 +551,7 @@ def run_main(flags, default_hparams, train_fn, inference_fn, target_session=""):
         utils.print_out("  %s: %.1f" % (metric, score))
   else:
     # Train
-    train_fn(hparams, target_session=target_session)
+    train_fn(hparams, target_session=target_session, tf_debug=FLAGS.tf_debug)
 
 
 def main(unused_argv):

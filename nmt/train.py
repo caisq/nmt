@@ -21,6 +21,7 @@ import random
 import time
 
 import tensorflow as tf
+from tensorflow.python import debug
 
 from . import attention_model
 from . import gnmt_model
@@ -199,7 +200,7 @@ def check_stats(stats, global_step, steps_per_stats, hparams, log_f):
   return is_overflow
 
 
-def train(hparams, scope=None, target_session=""):
+def train(hparams, scope=None, target_session="", tf_debug=None):
   """Train a translation model."""
   log_device_placement = hparams.log_device_placement
   out_dir = hparams.out_dir
@@ -283,6 +284,11 @@ def train(hparams, scope=None, target_session=""):
   # Initialize all of the iterators
   skip_count = hparams.batch_size * hparams.epoch_step
   utils.print_out("# Init train iterator, skipping %d elements" % skip_count)
+
+  if tf_debug == "local":
+    train_sess = debug.LocalCLIDebugWrapperSession(train_sess)
+  elif tf_debug:
+    raise ValueError("Unrecognized tf_debug value: %s" % tf_debug)
   train_sess.run(
       train_model.iterator.initializer,
       feed_dict={train_model.skip_count_placeholder: skip_count})

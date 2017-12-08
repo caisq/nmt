@@ -349,25 +349,26 @@ at:
 will use tst2012 as our dev dataset, and tst2013 as our test dataset.
 
 Run the following command to download the data for training NMT model:\
-	`nmt/scripts/download_iwslt15.sh /tmp/nmt_data`
+	`nmt/scripts/download_iwslt15.sh ${HOME}/ml-data/nmt_data`
 
 Run the following command to start the training:
 
 ``` shell
-mkdir /tmp/nmt_model
+mkdir ${HOME}/ml-logs/nmt_model
 python -m nmt.nmt \
     --src=vi --tgt=en \
-    --vocab_prefix=/tmp/nmt_data/vocab  \
-    --train_prefix=/tmp/nmt_data/train \
-    --dev_prefix=/tmp/nmt_data/tst2012  \
-    --test_prefix=/tmp/nmt_data/tst2013 \
-    --out_dir=/tmp/nmt_model \
+    --vocab_prefix=${HOME}/ml-data/nmt_data/vocab  \
+    --train_prefix=${HOME}/ml-data/nmt_data/train \
+    --dev_prefix=${HOME}/ml-data/nmt_data/tst2012  \
+    --test_prefix=${HOME}/ml-data/nmt_data/tst2013 \
+    --out_dir=${HOME}/ml-logs/nmt_model \
     --num_train_steps=12000 \
     --steps_per_stats=100 \
     --num_layers=2 \
     --num_units=128 \
     --dropout=0.2 \
-    --metrics=bleu
+    --metrics=bleu \
+    --tf_debug=local
 ```
 
 The above command trains a 2-layer LSTM seq2seq model with 128-dim hidden units
